@@ -1,0 +1,102 @@
+
+/* =============================================
+   ROCKET LAUNCH & REVEAL ANIMATIONS
+   ============================================= */
+
+/* 1. Rocket Launch Animation */
+.launching {
+    pointer-events: none;
+    animation: 
+        rocket-fly 2.2s cubic-bezier(0.5, 0, 1, 1) forwards,
+        rocket-wiggle 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes rocket-fly {
+    0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 50px rgba(255, 150, 50, 0.8));
+    }
+    100% {
+        transform: translateY(-120vh) translateX(15vw) scale(0.2) rotate(15deg);
+        opacity: 0;
+        filter: drop-shadow(0 0 100px rgba(255, 100, 20, 1));
+    }
+}
+
+@keyframes rocket-wiggle {
+    from { transform: translateX(-5px) rotate(-1deg); }
+    to { transform: translateX(5px) rotate(1deg); }
+}
+
+/* 2. Smoke Particles (Spawned in JS) */
+.smoke-particle {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(200, 220, 255, 0.4) 0%, rgba(200, 220, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(8px);
+    z-index: 6;
+    animation: smoke-expand 1.5s ease-out forwards;
+}
+
+@keyframes smoke-expand {
+    0% { transform: scale(0.5); opacity: 0.8; }
+    100% { transform: scale(4); opacity: 0; }
+}
+
+/* 3. Full Screen Smoke Overlay */
+#smoke-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(100, 120, 160, 0.0) 0%, rgba(10, 15, 30, 0.0) 100%);
+    backdrop-filter: blur(0px);
+    transition: background 2s ease-in-out, backdrop-filter 2s ease-in-out;
+}
+
+#smoke-screen.fill-screen {
+    pointer-events: auto;
+    background: radial-gradient(circle, rgba(180, 200, 230, 0.95) 0%, rgba(40, 50, 80, 0.9) 100%);
+    backdrop-filter: blur(15px);
+}
+
+/* 4. Reveal Text Overlay */
+#reveal-text-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out 0.5s;
+}
+
+#reveal-text-layer.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.reveal-text {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 40px rgba(150, 180, 255, 0.4),
+        0 8px 30px rgba(0, 0, 0, 0.8);
+    transform: scale(0.85);
+    transition: transform 2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
+}
+
+#reveal-text-layer.show .reveal-text {
+    transform: scale(1);
+}

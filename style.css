@@ -1,0 +1,371 @@
+/* =============================================
+   SPACE BIRTHDAY INVITATION — STYLE SHEET
+   Layer order: bg > overlay > stars > floats > center
+   ============================================= */
+
+/* --- Design Tokens --- */
+:root {
+    --glow-soft:  rgba(160, 190, 255, 0.35);
+    --glow-hover: rgba(200, 220, 255, 0.70);
+    --glow-ring:  rgba(140, 170, 255, 0.20);
+    --space-dark: #04040f;
+    --transition-smooth: 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--space-dark);
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* =============================================
+   LAYER 1 — BACKGROUND IMAGE
+   ============================================= */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    background-image: url('images/background_images/dark_space_background_202604121946.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    /* Subtle slow-zoom Ken Burns effect */
+    animation: slow-zoom 40s ease-in-out infinite alternate;
+}
+
+@keyframes slow-zoom {
+    from { transform: scale(1.00); }
+    to   { transform: scale(1.06); }
+}
+
+/* =============================================
+   LAYER 2 — DARK OVERLAY
+   ============================================= */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 0.35) 0%,
+        rgba(0, 0, 0, 0.60) 100%
+    );
+    z-index: 2;
+}
+
+/* =============================================
+   LAYER 3 — STAR FIELD
+   ============================================= */
+#star-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Stars are created in JS; two animation groups */
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    will-change: opacity, transform;
+}
+
+/* Twinkling — tiny opacity/scale pulse */
+@keyframes twinkle-a {
+    0%, 100% { opacity: 0.08; transform: scale(0.75); }
+    50%       { opacity: 0.90; transform: scale(1.30); }
+}
+@keyframes twinkle-b {
+    0%, 100% { opacity: 0.15; transform: scale(1.00); }
+    50%       { opacity: 0.50; transform: scale(0.70); }
+}
+
+/* Very slow vertical drift — separate layer transform so it doesn't
+   fight with the twinkle transform. We use a wrapper div trick below. */
+@keyframes star-drift {
+    from { transform: translateY(0px);   }
+    to   { transform: translateY(-18px); }
+}
+
+/* =============================================
+   LAYER 4 — FLOATING DECORATIVE IMAGES
+   ============================================= */
+#floating-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.float-img {
+    position: absolute;
+    object-fit: contain;
+    pointer-events: none;
+    will-change: transform;
+    filter:
+        drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55))
+        drop-shadow(0 0 14px rgba(160, 180, 255, 0.22));
+    animation: float-bob var(--dur, 8s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@keyframes float-bob {
+    0%   { transform: translateY(0px)   rotate(var(--rot-from, 0deg)); }
+    100% { transform: translateY(-22px) rotate(var(--rot-to,   0deg)); }
+}
+
+/* =============================================
+   CORNER DECORATIVE IMAGES
+   ============================================= */
+.corner-img {
+    position: absolute;
+    object-fit: contain;
+    pointer-events: none;
+    filter:
+        drop-shadow(0 8px 30px rgba(0, 0, 0, 0.85))
+        drop-shadow(0 0 20px rgba(160, 180, 255, 0.25));
+}
+
+
+/* =============================================
+   LAYER 5 — CENTER CLICKABLE IMAGE
+   ============================================= */
+.center-wrap {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    pointer-events: none; /* children opt back in */
+}
+
+.center-card {
+    position: relative;
+    pointer-events: auto;
+    cursor: pointer;
+    outline: none;
+
+    /* Idle pulse */
+    animation: pulse-idle 5s ease-in-out infinite;
+    transition: transform var(--transition-smooth);
+}
+
+/* Ambient glow behind the center card for depth */
+.center-card::before {
+    content: '';
+    position: absolute;
+    inset: -50px;
+    border-radius: 50%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(80, 60, 160, 0.50) 0%,
+        rgba(40, 30, 100, 0.25) 55%,
+        transparent 75%
+    );
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(22px);
+}
+
+.center-card:hover,
+.center-card:focus-visible {
+    animation-play-state: paused;
+    transform: scale(1.07);
+}
+
+.center-card:active {
+    transform: scale(1.03);
+    transition-duration: 0.15s;
+}
+
+@keyframes pulse-idle {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-24px); }
+}
+
+.center-img {
+    display: block;
+    width: clamp(280px, 38vw, 520px);
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter:
+        drop-shadow(0 0 28px var(--glow-soft))
+        drop-shadow(0 12px 40px rgba(0, 0, 0, 0.55));
+    transition: filter var(--transition-smooth);
+}
+
+.center-card:hover .center-img,
+.center-card:focus-visible .center-img {
+    filter:
+        drop-shadow(0 0 50px var(--glow-hover))
+        drop-shadow(0 18px 50px rgba(0, 0, 0, 0.75));
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+    .center-img {
+        width: clamp(220px, 78vw, 360px);
+    }
+
+    .float-img {
+        /* Scale down floaters a touch on mobile */
+        max-width: 80px !important;
+        max-height: 80px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* =============================================
+   ROCKET LAUNCH & REVEAL ANIMATIONS
+   ============================================= */
+
+/* 1. Rocket Launch Animation */
+.launching {
+    pointer-events: none !important;
+    animation: rocket-launch 1.2s cubic-bezier(0.5, 0, 0.7, 1) forwards !important;
+}
+
+@keyframes rocket-launch {
+    0% {
+        transform: translateY(0);
+    }
+    15% {
+        /* Anticipation - crouch slightly */
+        transform: translateY(20px);
+    }
+    100% {
+        /* Shoot straight up far beyond the screen */
+        transform: translateY(-150vh);
+    }
+}
+
+@keyframes rocket-wiggle {
+    from { transform: translateX(-5px) rotate(-1deg); }
+    to { transform: translateX(5px) rotate(1deg); }
+}
+
+/* =============================================
+   SHOOTING STARS
+   ============================================= */
+.shooting-star {
+    position: absolute;
+    width: 250px;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(200, 230, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1; /* Under floaters, over bg */
+    filter: 
+        drop-shadow(0 0 10px rgba(180, 220, 255, 0.9))
+        drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+    animation: shooting-fly 1.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes shooting-fly {
+    0% {
+        transform: rotate(35deg) translateX(-20vw) scaleX(0.5);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(35deg) translateX(120vw) scaleX(1.5);
+        opacity: 0;
+    }
+}
+
+/* 2. Smoke Particles (Spawned in JS) */
+.smoke-particle {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(200, 220, 255, 0.3) 0%, rgba(200, 220, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(10px);
+    z-index: 6;
+    animation: smoke-expand 2.5s ease-out forwards;
+}
+
+@keyframes smoke-expand {
+    0% { transform: scale(0.5); opacity: 0.8; }
+    50% { opacity: 0.5; }
+    100% { transform: scale(10); opacity: 0; }
+}
+
+/* 3. Full Screen Smoke Overlay */
+#smoke-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+    background: radial-gradient(ellipse at bottom, rgba(180, 200, 230, 0.95) 0%, rgba(30, 40, 60, 0.9) 100%);
+    backdrop-filter: blur(15px);
+    opacity: 0;
+    transition: opacity 3s cubic-bezier(0.3, 0.0, 0.2, 1);
+}
+
+#smoke-screen.fill-screen {
+    pointer-events: auto;
+    opacity: 1;
+}
+
+/* 4. Reveal Text Overlay */
+#reveal-text-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out 0.5s;
+}
+
+#reveal-text-layer.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.reveal-text {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 40px rgba(150, 180, 255, 0.4),
+        0 8px 30px rgba(0, 0, 0, 0.8);
+    transform: scale(0.85);
+    transition: transform 2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
+}
+
+#reveal-text-layer.show .reveal-text {
+    transform: scale(1);
+}

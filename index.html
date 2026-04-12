@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="You are cordially invited — a special birthday celebration awaits.">
+    <title>Birthday Invitation ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Outfit:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Layer 1: Background -->
+    <div class="bg-layer"></div>
+
+    <!-- Layer 2: Dark Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Layer 3: Star Field (CSS + JS) -->
+    <div id="star-layer" aria-hidden="true"></div>
+
+    <!-- Layer 4: Floating Decorative Images -->
+    <div id="floating-layer" aria-hidden="true"></div>
+
+    <!-- Layer 5: Center Clickable Image -->
+    <div class="center-wrap" id="center-wrap">
+        <div class="center-card" id="main-card" role="button" tabindex="0" aria-label="Open Birthday Invitation">
+            <img src="images/click_image/Untitled.png" alt="Birthday Invitation" class="center-img" id="main-invitation"
+                draggable="false">
+        </div>
+    </div>
+
+    <!-- Layer 6: Action Overlay (Smoke & Text) -->
+    <div id="smoke-screen" aria-hidden="true"></div>
+    <div id="reveal-text-layer" aria-hidden="true">
+        <div class="reveal-text">HAPPY BIRTHDAY PRIYANSH</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
