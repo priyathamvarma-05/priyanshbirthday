@@ -242,6 +242,9 @@ function buildFloatingImages() {
         img.classList.add('corner-img');
 
         img.style.cssText = `
+            position: absolute;
+            object-fit: contain;
+            pointer-events: none;
             ${item.positionCSS}
             width:   ${item.size}px;
             opacity: ${opacity};
