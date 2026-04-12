@@ -236,7 +236,7 @@ function buildFloatingImages() {
         const opacity = 1.0;
 
         const img = document.createElement('img');
-        img.src = `images/random_images/${item.file}`;
+        img.src = `Images/random_images/${item.file}`;
         img.alt = '';
         img.draggable = false;
         img.classList.add('corner-img');

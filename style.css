@@ -34,7 +34,7 @@ html, body {
 .bg-layer {
     position: fixed;
     inset: 0;
-    background-image: url('images/background_images/dark_space_background_202604121946.png');
+    background-image: url('Images/background_images/dark_space_background_202604121946.png');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
