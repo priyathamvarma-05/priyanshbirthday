@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyBgRemovalToCenter();
     initLaunchAnimation();
 
-    // Start shooting stars loop
+    // Start background loops
     setTimeout(spawnShootingStar, rand(1000, 3000));
 });
 
@@ -219,11 +219,6 @@ function buildFloatingImages() {
 
     const ITEMS = [
         {
-            file: 'Adobe Express - file.png',
-            positionCSS: 'left: 3vw; bottom: 3vh;',
-            size: 280
-        },
-        {
             file: 'Untitled.png',
             positionCSS: 'right: 3vw; top: 3vh;',
             size: 280
@@ -277,22 +272,32 @@ function initLaunchAnimation() {
 
         // 1. Launch Rocket
         mainCard.classList.add('launching');
+        document.querySelectorAll('.pre-launch-text').forEach(el => el.style.opacity = '0');
 
-        // 3. Full Screen Smoke Transition - temporarily disabled
-        // setTimeout(() => {
-        //     if (smokeScreen) smokeScreen.classList.add('fill-screen');
-        // }, 1200);
+        // 2. Cinematic Smoke Trail Pipeline
+        let elapsed = 0;
+        const tickRate = 35; // spawn every 35ms
 
-        // 4. Reveal Text - adjusted to match rocket timing
+        const smokeInterval = setInterval(() => {
+            spawnSmoke(elapsed);
+            elapsed += tickRate;
+        }, tickRate);
+
+        // Stop smoke spawning abruptly just before rocket clears viewport
+        setTimeout(() => {
+            clearInterval(smokeInterval);
+        }, 1100);
+
+        // 3. Reveal Text Cinematic Post-Fog
         setTimeout(() => {
             if (revealTextLayer) revealTextLayer.classList.add('show');
-        }, 1200);
+        }, 2200);
     });
 }
 
-function spawnSmoke() {
+function spawnSmoke(elapsedTime) {
     const mainCard = document.getElementById('main-card');
-    const smokeLayer = document.getElementById('smoke-screen');
+    const smokeLayer = document.getElementById('smoke-layer');
     if (!mainCard || !smokeLayer) return;
 
     // Get current animated position of the rocket
@@ -305,22 +310,36 @@ function spawnSmoke() {
     const particle = document.createElement('div');
     particle.classList.add('smoke-particle');
 
-    // Add minor random jitter
-    const jitterX = rand(-15, 15);
-    const jitterY = rand(0, 20);
+    // Add organic jitter
+    const jitterX = rand(-25, 25);
+    const jitterY = rand(0, 30);
 
-    particle.style.left = `${x + jitterX - 30}px`; // offset by half width of smoke (.smoke-particle is 60x60)
+    particle.style.left = `${x + jitterX - 30}px`; 
     particle.style.top = `${y + jitterY - 30}px`;
 
-    // Append to smoke container temporarily
-    smokeLayer.appendChild(particle);
+    // Dynamic drifting vector variables for CSS calc()
+    particle.style.setProperty('--dx', `${rand(-30, 30)}px`);
+    particle.style.setProperty('--dy', `${rand(-20, 40)}px`);
 
-    // Clean up DOM nodes after animation completes to keep performance high
-    setTimeout(() => {
-        if (particle.parentNode) {
-            particle.parentNode.removeChild(particle);
-        }
-    }, 1500);
+    // Scale randomness for trail organic feel
+    if (!particle.classList.contains('smoke-fill')) {
+        particle.style.transform = `scale(${rand(0.8, 1.2)})`;
+    }
+
+    // Engulf Logic: The final particles spawned as it reaches the top become the dense fog screen
+    if (elapsedTime && elapsedTime > 750) {
+        particle.classList.add('smoke-fill');
+        // Fill particles are permanent to cover background
+    } else {
+        // Clean up normal trail particles to save DOM memory
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, 3000);
+    }
+
+    smokeLayer.appendChild(particle);
 }
 
 /* =============================================
