@@ -274,73 +274,13 @@ function initLaunchAnimation() {
         mainCard.classList.add('launching');
         document.querySelectorAll('.pre-launch-text').forEach(el => el.style.opacity = '0');
 
-        // 2. Cinematic Smoke Trail Pipeline
-        let elapsed = 0;
-        const tickRate = 35; // spawn every 35ms
-
-        const smokeInterval = setInterval(() => {
-            spawnSmoke(elapsed);
-            elapsed += tickRate;
-        }, tickRate);
-
-        // Stop smoke spawning abruptly just before rocket clears viewport
-        setTimeout(() => {
-            clearInterval(smokeInterval);
-        }, 1100);
-
-        // 3. Reveal Text Cinematic Post-Fog
+        // 2. Reveal Text
         setTimeout(() => {
             if (revealTextLayer) revealTextLayer.classList.add('show');
-        }, 2200);
+        }, 1200);
     });
 }
 
-function spawnSmoke(elapsedTime) {
-    const mainCard = document.getElementById('main-card');
-    const smokeLayer = document.getElementById('smoke-layer');
-    if (!mainCard || !smokeLayer) return;
-
-    // Get current animated position of the rocket
-    const rect = mainCard.getBoundingClientRect();
-
-    // Position smoke near the engines (bottom-center)
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height * 0.9;
-
-    const particle = document.createElement('div');
-    particle.classList.add('smoke-particle');
-
-    // Add organic jitter
-    const jitterX = rand(-25, 25);
-    const jitterY = rand(0, 30);
-
-    particle.style.left = `${x + jitterX - 30}px`; 
-    particle.style.top = `${y + jitterY - 30}px`;
-
-    // Dynamic drifting vector variables for CSS calc()
-    particle.style.setProperty('--dx', `${rand(-30, 30)}px`);
-    particle.style.setProperty('--dy', `${rand(-20, 40)}px`);
-
-    // Scale randomness for trail organic feel
-    if (!particle.classList.contains('smoke-fill')) {
-        particle.style.transform = `scale(${rand(0.8, 1.2)})`;
-    }
-
-    // Engulf Logic: The final particles spawned as it reaches the top become the dense fog screen
-    if (elapsedTime && elapsedTime > 750) {
-        particle.classList.add('smoke-fill');
-        // Fill particles are permanent to cover background
-    } else {
-        // Clean up normal trail particles to save DOM memory
-        setTimeout(() => {
-            if (particle.parentNode) {
-                particle.parentNode.removeChild(particle);
-            }
-        }, 3000);
-    }
-
-    smokeLayer.appendChild(particle);
-}
 
 /* =============================================
    SHOOTING STARS LOOP

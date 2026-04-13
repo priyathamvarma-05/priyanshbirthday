@@ -372,73 +372,7 @@ body {
     }
 }
 
-/* 2. Smoke Particles (Spawned in JS) */
-.smoke-particle {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    /* Soft blue/grey milky cloud texture */
-    background: radial-gradient(circle, rgba(180, 200, 235, 0.45) 0%, rgba(180, 200, 235, 0.1) 40%, rgba(200, 220, 255, 0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    /* Massive gaussian blur to sell the vapor feel */
-    filter: blur(15px);
-    z-index: 6;
-    /* Default behavior: trail puff */
-    animation: smoke-trail 3s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
-}
-
-/* Base trail puffs expand slightly and fade entirely */
-@keyframes smoke-trail {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-
-    15% {
-        opacity: 0.9;
-    }
-
-    50% {
-        transform: scale(8) translate(var(--dx, 0), var(--dy, 0));
-        opacity: 0.5;
-    }
-
-    100% {
-        transform: scale(14) translate(calc(var(--dx, 0) * 2), calc(var(--dy, 0) * 2));
-        opacity: 0;
-    }
-}
-
-/* Cinematic Full Screen Engulf Modifier */
-.smoke-fill {
-    /* Hard override for the explosion of the final particles */
-    animation: smoke-engulf 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    filter: blur(25px);
-    /* extreme blur to hide structure */
-    z-index: 7;
-    /* Pull above trail */
-}
-
-@keyframes smoke-engulf {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(60);
-        /* Grossly large to guarantee corner to corner solid fill */
-        opacity: 0.95;
-        /* Holds mostly opaque permanently */
-    }
-}
-
-/* 4. Reveal Text Overlay */
+/* 3. Reveal Text Overlay */
 #reveal-text-layer {
     position: fixed;
     inset: 0;
